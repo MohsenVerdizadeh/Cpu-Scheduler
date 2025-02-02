@@ -2,3 +2,4 @@ log/
 .idea/
 configs.py
 __pycache__
+test.py
