@@ -7,6 +7,13 @@ from configs import process_generate_count_per_second
 from classes import Process
 
 
+def clock(current_time, current_time_sem):
+    while True:
+        sleep(1)
+        with current_time_sem:
+            current_time += 1
+
+
 # completed_process_count_sem = threading.Semaphore(1)
 #
 #
@@ -27,12 +34,18 @@ def generate_process(input_queue, completed_process_count):
         start_time += 1
 
 
+def scheduler(input_queue, ready_queue):
+
+
 if __name__ == "__main__":
-    real_start_time = time.time()
+    current_time = 0
+    current_time_sem = threading.Semaphore(1)
+    clock_thread = threading.Thread(target=clock, args=(current_time, current_time_sem), daemon=True)
+    clock_thread.start()
+
     input_queue = queue.Queue()
     completed_process_count = 0
     proc_gen = threading.Thread(target=generate_process, args=(input_queue, completed_process_count), daemon=True)
     proc_gen.start()
-    redy_queue =queue.PriorityQueue(20)
-    redy_queue.
-
+    ready_queue = queue.PriorityQueue(20)
+    ready_queue.
