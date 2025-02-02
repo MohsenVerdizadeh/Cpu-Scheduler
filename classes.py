@@ -7,3 +7,7 @@ class Process:
         self.execution_time = random.randint(1, 10)
         self.deadline = self.execution_time + random.randint(1, 10)
         self.score = random.randint(1, 100)
+        self.priority = random.randint(1, 100)
+
+    def calculate_priority(self):
+        self.priority = self.score / self.deadline
