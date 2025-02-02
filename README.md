@@ -17,12 +17,8 @@ This is final project of my operating system course that it implements an **Earl
 
 1. **Clone the Repository:**
    ```sh
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/MohsenVerdizadeh/Cpu-Scheduler.git
    cd your-repository
-   ```
-2. **Install Dependencies:**
-   ```sh
-   pip install -r requirements.txt  # (If dependencies exist)
    ```
 3. **Run the Scheduler:**
    ```sh
