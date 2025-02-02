@@ -2,7 +2,7 @@
 
 ## 📌 Project Overview
 
-This is final project of my operating system course that it implements an **Earliest Deadline First (EDF)** scheduling algorithm for a **multi-core CPU simulation**. It efficiently manages **real-time processes** with execution constraints, prioritizing tasks based on their deadlines and maximizing system performance.
+This is the final project of my operating system course that implements an **Earliest Deadline First (EDF)** scheduling algorithm for a **multi-core CPU simulation**. It efficiently manages **real-time processes** with execution constraints, prioritizing tasks based on their deadlines and maximizing system performance.
 
 ## ⚙️ Features
 
