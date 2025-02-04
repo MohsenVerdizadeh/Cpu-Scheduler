@@ -9,7 +9,7 @@ def run(lock):
 
 
 if __name__ == "__main__":
-    with open("simulate_data.txt", "w") as file:
+    with open("log/simulate_data.txt", "w") as file:
         json.dump([], file)
     with multiprocessing.Manager() as manager:
         lock = manager.Lock()  # Create a lock using Manager (fixes the issue)
@@ -17,7 +17,7 @@ if __name__ == "__main__":
         count = [lock] * 10  # Create a list of locks
         with multiprocessing.Pool(processes=4) as pool:
             pool.map(run, count)  # Run processes safely
-    with open("simulate_data.txt", "r") as file:
+    with open("log/simulate_data.txt", "r") as file:
         simulates_data = json.load(file)
     simulates = [i for i in range(1, 11)]
     hit_rates = []

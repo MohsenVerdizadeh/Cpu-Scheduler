@@ -105,9 +105,9 @@ def main(lock):
     print("finish")
     with lock:
         print("get lock")
-        with open("simulate_data.txt", "r") as file:
+        with open("log/simulate_data.txt", "r") as file:
             simulate_data = json.load(file)
 
         simulate_data.append(data)
-        with open("simulate_data.txt", "w") as file:
+        with open("log/simulate_data.txt", "w") as file:
             json.dump(simulate_data, file)
