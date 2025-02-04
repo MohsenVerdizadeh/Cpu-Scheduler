@@ -1,3 +1,4 @@
+import json
 import threading
 from time import sleep
 
@@ -16,20 +17,20 @@ def clock(current_time):
 
 def generate_process(input_queue, hit_count, current_time, proc_count):
     sleep(0.3)
-    write("Process generator started.")
+    # write("Process generator started.")
     while hit_count.get() < hit_count_bound:
         for _ in range(process_generate_count_per_second):
             proc_count.increment()
             process = Process(proc_count.get(), current_time.get())
             input_queue.put(process)
-            write_file("log/process.txt", str(process) + " created")
+            # write_file("log/process.txt", str(process) + " created")
         sleep(1)
-    write_file("log/process.txt", "------------------------------------")
+    # write_file("log/process.txt", "------------------------------------")
 
 
 def scheduler(input_queue, ready_queue, hit_count, current_time):
     sleep(0.31)
-    write("Scheduler started.")
+    # write("Scheduler started.")
     while hit_count.get() < hit_count_bound or not input_queue.empty():
         if not input_queue.empty():
             new_process = input_queue.pop_best()
@@ -41,7 +42,7 @@ def scheduler(input_queue, ready_queue, hit_count, current_time):
 
 def cpu_work(ready_queue, hit_count, score, current_time, total_waiting_time, total_response_time):
     sleep(0.33)
-    write("CPU started.")
+    # write("CPU started.")
     while hit_count.get() < hit_count_bound or not ready_queue.empty():
         if not ready_queue.empty():
             process = ready_queue.pop_best()
@@ -50,10 +51,10 @@ def cpu_work(ready_queue, hit_count, score, current_time, total_waiting_time, to
             hit_count.increment()
             total_response_time.increment(current_time.get() - process.arrival_time)
             score.increment(process.score)
-            write_file("log/hit_process.txt",
-                       str(process) + ", Start Time : " + str(
-                           current_time.get() - process.execution_time) + ", End Time : " + str(
-                           current_time.get()))
+            # write_file("log/hit_process.txt",
+            #            str(process) + ", Start Time : " + str(
+            #                current_time.get() - process.execution_time) + ", End Time : " + str(
+            #                current_time.get()))
 
 
 def write(message):
@@ -67,7 +68,7 @@ def write_file(file_path, message):
             file.write(message + "\n")
 
 
-if __name__ == "__main__":
+def main(lock):
     current_time = VarWithLock()
     clock_thread = threading.Thread(target=clock, args=(current_time,), daemon=True)
     clock_thread.start()
@@ -98,7 +99,15 @@ if __name__ == "__main__":
     for t in cores:
         t.join()
 
-    write_file("log/hit_process.txt",
-               "-------------------------------")
-    write_file("log/result.txt",
-               f"Average Waiting Time: {total_waiting_time.get() / hit_count.get()},Average Response Time: {total_response_time.get() / hit_count.get()}, Hit Count : {hit_count.get()} , Process Count : {proc_count.get()} , Total Hit Ratio : {hit_count.get() / proc_count.get()} -----------> Total Score : {score.get()}.")
+    data = {"hit rate": hit_count.get() / proc_count.get(), "score": score.get(),
+            "average waiting time": total_waiting_time.get() / hit_count.get(),
+            "average response time": total_response_time.get() / hit_count.get()}
+    print("finish")
+    with lock:
+        print("get lock")
+        with open("simulate_data.txt", "r") as file:
+            simulate_data = json.load(file)
+
+        simulate_data.append(data)
+        with open("simulate_data.txt", "w") as file:
+            json.dump(simulate_data, file)
